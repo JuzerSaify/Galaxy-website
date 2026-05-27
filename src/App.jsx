@@ -27,6 +27,7 @@ export default function App() {
 
   // Dashboard metrics states
   const [dbUsage, setDbUsage] = useState([]);
+  const [activeDashboardTab, setActiveDashboardTab] = useState('overview'); // 'overview' | 'queries' | 'models' | 'download'
   const [metrics, setMetrics] = useState({
     stats: { queryCount: 0, totalTokens: 0 },
     weeklyTrend: [],
@@ -963,97 +964,187 @@ export default function App() {
 
           <div className="dashboard-split-layout">
             
-            {/* Left Side: Stats and Charts */}
-            <div className="dashboard-left-panel">
-              {/* Sync Stats Cards */}
-              <div className="dashboard-stats">
-                <div className="dashboard-stat-card">
-                  <span className="stat-label">Deep Research Sessions</span>
-                  <span className="stat-value">{metrics.stats.queryCount}</span>
-                  <span className="stat-desc">Total completed runs logged securely to database</span>
-                </div>
-                <div className="dashboard-stat-card">
-                  <span className="stat-label">Estimated Tokens Processed</span>
-                  <span className="stat-value">{metrics.stats.totalTokens.toLocaleString()}</span>
-                  <span className="stat-desc">Active contextual load processed on Ollama engine</span>
-                </div>
-              </div>
+            {/* Left Sidebar Tabs */}
+            <div className="dashboard-tab-sidebar">
+              <button 
+                onClick={() => setActiveDashboardTab('overview')} 
+                className={`dashboard-tab-btn ${activeDashboardTab === 'overview' ? 'active' : ''}`}
+              >
+                <Activity size={15} />
+                <span>Overview</span>
+              </button>
+              <button 
+                onClick={() => setActiveDashboardTab('queries')} 
+                className={`dashboard-tab-btn ${activeDashboardTab === 'queries' ? 'active' : ''}`}
+              >
+                <Terminal size={15} />
+                <span>Intelligence Runs</span>
+              </button>
+              <button 
+                onClick={() => setActiveDashboardTab('models')} 
+                className={`dashboard-tab-btn ${activeDashboardTab === 'models' ? 'active' : ''}`}
+              >
+                <Cpu size={15} />
+                <span>Model Analytics</span>
+              </button>
+              <button 
+                onClick={() => setActiveDashboardTab('download')} 
+                className={`dashboard-tab-btn ${activeDashboardTab === 'download' ? 'active' : ''}`}
+              >
+                <Monitor size={15} />
+                <span>Download Client</span>
+              </button>
 
-              {/* Charts Section */}
-              <div className="charts-grid">
-                <div className="chart-wrapper">
-                  <h3 className="chart-title">Token Ingestion Trend</h3>
-                  <span className="chart-subtitle">Volume of context parsed by local LLM models (7-day trend)</span>
-                  <div className="chart-container" style={{ border: '1px solid var(--border-medium)', borderRadius: '4px', padding: '12px', backgroundColor: '#FFFFFF' }}>
-                    {renderWeeklyTrendChart()}
-                  </div>
-                </div>
-
-                <div className="chart-wrapper">
-                  <h3 className="chart-title">Model Utilization Share</h3>
-                  <span className="chart-subtitle">Comparative run frequency distributed by model tags</span>
-                  <div className="chart-container" style={{ border: '1px solid var(--border-medium)', borderRadius: '4px', padding: '12px', backgroundColor: '#FFFFFF' }}>
-                    {renderModelRunsChart()}
-                  </div>
-                </div>
+              <div className="sidebar-sync-status">
+                <span className="sync-dot active"></span>
+                <span className="sync-text">Realtime Synced</span>
               </div>
             </div>
 
-            {/* Right Side: Table and Download Client */}
-            <div className="dashboard-right-panel">
-              {/* Recent Queries Table */}
-              <div className="recent-queries-section">
-                <h3 className="chart-title">Recent Intelligence Runs</h3>
-                <div className="queries-table-container">
-                  <table className="queries-table">
-                    <thead>
-                      <tr>
-                        <th>Research Query</th>
-                        <th>Model Tag</th>
-                        <th>Tokens</th>
-                        <th>Sources</th>
-                        <th>Date Run</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {metrics.recentQueries.length === 0 ? (
-                        <tr>
-                          <td colSpan="5" style={{ textAlign: 'center', padding: '32px', color: 'var(--text-tertiary)', fontStyle: 'italic' }}>
-                            No deep research logs recorded. Initialize research queries on your desktop instance to synchronize metrics.
-                          </td>
-                        </tr>
-                      ) : (
-                        metrics.recentQueries.map((q, idx) => (
-                          <tr key={idx}>
-                            <td className="query-text-cell" title={q.query}>{q.query}</td>
-                            <td><span className="model-badge">{q.selected_model.split(':')[0]}</span></td>
-                            <td>{q.tokens_estimated.toLocaleString()}</td>
-                            <td>{q.sources_count || 0}</td>
-                            <td>{new Date(q.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+            {/* Right Pane Content */}
+            <div className="dashboard-content-pane">
+              {activeDashboardTab === 'overview' && (
+                <div className="tab-pane-content fade-in">
+                  <div className="pane-header">
+                    <h2 className="pane-title">Performance Overview</h2>
+                    <span className="pane-subtitle">Live real-time aggregation of local deep research session telemetry</span>
+                  </div>
 
-              {/* Download Client CTA */}
-              <div style={{ borderTop: '1px solid var(--border-medium)', paddingTop: '32px', display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px' }}>
-                <h3 className="chart-title">Get the Desktop Client</h3>
-                <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-                  Ready to execute research agents? Download the standalone application and authenticate with your user credentials to sync history.
-                </p>
-                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                  <a href="https://github.com/JuzerSaify/galaxy/releases/download/v1.0.0/Galaxy.Setup.1.0.0.exe" className="btn-primary" style={{ width: 'fit-content', padding: '8px 16px', fontSize: '13px' }}>
-                    <Monitor size={15} />
-                    Download Standalone Client (.exe)
-                  </a>
-                  <button onClick={fetchUserUsage} className="btn-secondary" style={{ padding: '8px 16px', fontSize: '13px' }} title="Sync database stats">
-                    <RefreshCw size={14} className={loading ? "spin" : ""} /> Sync Now
-                  </button>
+                  {/* Clean Minimalist Stats (No card borders, pure numbers) */}
+                  <div className="dashboard-stats-minimal">
+                    <div className="stat-item-minimal">
+                      <span className="stat-label">Deep Research Sessions</span>
+                      <span className="stat-value">{metrics.stats.queryCount}</span>
+                      <span className="stat-desc">Completed research sequences executed on your nodes</span>
+                    </div>
+                    <div className="stat-item-minimal">
+                      <span className="stat-label">Estimated Tokens Ingested</span>
+                      <span className="stat-value">{metrics.stats.totalTokens.toLocaleString()}</span>
+                      <span className="stat-desc">Contextual tokens loaded through local LLM architectures</span>
+                    </div>
+                  </div>
+
+                  {/* Ingestion Trend */}
+                  <div className="chart-wrapper-minimal">
+                    <h3 className="chart-title">Contextual Ingestion Volume</h3>
+                    <span className="chart-subtitle">7-day volume trend of loaded token contexts</span>
+                    <div className="chart-container-minimal">
+                      {renderWeeklyTrendChart()}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {activeDashboardTab === 'queries' && (
+                <div className="tab-pane-content fade-in">
+                  <div className="pane-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <h2 className="pane-title">Recent Intelligence Runs</h2>
+                      <span className="pane-subtitle">Secure, local deep research session runs synced from desktop application</span>
+                    </div>
+                    <button onClick={fetchUserUsage} className="sync-btn-minimal" title="Force sync database telemetry">
+                      <RefreshCw size={13} className={loading ? "spin" : ""} />
+                      <span>Sync telemetry</span>
+                    </button>
+                  </div>
+
+                  <div className="queries-table-container-minimal">
+                    <table className="queries-table-minimal">
+                      <thead>
+                        <tr>
+                          <th>Research Query</th>
+                          <th>Model Name</th>
+                          <th>Est. Tokens</th>
+                          <th>Web Sources</th>
+                          <th>Timestamp</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {metrics.recentQueries.length === 0 ? (
+                          <tr>
+                            <td colSpan="5" className="table-empty-cell">
+                              No research runs logged. Open the Galaxy desktop client and initiate a deep research run to sync.
+                            </td>
+                          </tr>
+                        ) : (
+                          metrics.recentQueries.map((q, idx) => (
+                            <tr key={idx}>
+                              <td className="query-text-cell" title={q.query}>{q.query}</td>
+                              <td><span className="model-badge">{q.selected_model.split(':')[0]}</span></td>
+                              <td>{q.tokens_estimated.toLocaleString()}</td>
+                              <td>{q.sources_count || 0} sources</td>
+                              <td>{new Date(q.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {activeDashboardTab === 'models' && (
+                <div className="tab-pane-content fade-in">
+                  <div className="pane-header">
+                    <h2 className="pane-title">Model Utilization</h2>
+                    <span className="pane-subtitle">Telemetry analytics mapping local LLM model selection and run count share</span>
+                  </div>
+
+                  <div className="chart-wrapper-minimal" style={{ maxWidth: '560px' }}>
+                    <h3 className="chart-title">Model Selection Share</h3>
+                    <span className="chart-subtitle">Run frequency count distribution map</span>
+                    <div className="chart-container-minimal">
+                      {renderModelRunsChart()}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeDashboardTab === 'download' && (
+                <div className="tab-pane-content fade-in">
+                  <div className="pane-header">
+                    <h2 className="pane-title">Standalone Client Download</h2>
+                    <span className="pane-subtitle">Download and set up the premium local-first AI deep research desktop app</span>
+                  </div>
+
+                  <div className="download-guide-container">
+                    <p className="download-intro-text">
+                      To run local LLMs, parse deep web sources, compile comprehensive reports, and sync stats to your profile in real-time, install the standalone desktop client.
+                    </p>
+
+                    <div className="setup-steps-list">
+                      <div className="setup-step">
+                        <span className="step-num">01</span>
+                        <div className="step-content">
+                          <span className="step-heading">Download Installer</span>
+                          <span className="step-description">Click below to fetch the desktop application installer executable (`Galaxy Setup 1.0.0.exe`).</span>
+                        </div>
+                      </div>
+                      <div className="setup-step">
+                        <span className="step-num">02</span>
+                        <div className="step-content">
+                          <span className="step-heading">Run Setup</span>
+                          <span className="step-description">Launch the installer. If Windows prompts with smart-screen, select "Run anyway". The app installs cleanly under your user profile.</span>
+                        </div>
+                      </div>
+                      <div className="setup-step">
+                        <span className="step-num">03</span>
+                        <div className="step-content">
+                          <span className="step-heading">Authenticate & Sync</span>
+                          <span className="step-description">Open the application, sign in with your email `{user.email}`, and your metrics will automatically synchronize in real-time.</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="download-action-row">
+                      <a href="https://github.com/JuzerSaify/galaxy/releases/download/v1.0.0/Galaxy.Setup.1.0.0.exe" className="btn-primary" style={{ display: 'flex', gap: '8px', alignItems: 'center', padding: '10px 20px', borderRadius: '4px', fontSize: '13px', width: 'fit-content', fontWeight: '500' }}>
+                        <Monitor size={15} />
+                        <span>Download Standalone Client (.exe)</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
           </div>
