@@ -420,7 +420,6 @@ export default function App() {
       {/* Site Header */}
       <header className="site-header">
         <div className="logo-container" style={{ cursor: 'pointer' }} onClick={() => setPage('landing')}>
-          <img src="/galaxy-icon.png" alt="Galaxy" className="logo-icon" />
           <span className="logo-text">Galaxy</span>
         </div>
         
@@ -433,7 +432,6 @@ export default function App() {
         
         <nav className="nav-links">
           <button onClick={() => setPage('changelog')} className={`nav-link-btn ${page === 'changelog' ? 'active' : ''}`}>Changelog</button>
-          <a href="https://github.com/JuzerSaify/galaxy" target="_blank" rel="noreferrer" className="nav-link">GitHub</a>
           
           {user ? (
             <>
@@ -489,12 +487,26 @@ export default function App() {
             </div>
           </section>
 
-          {/* Pixel-Accurate App Mockup Section (Multi-Screen Side-by-Side Grid) */}
+          {/* Alternating Showcase Series (One Screen after Next Screen Showcase) */}
           <section className="mockup-section">
-            <div className="mockup-grid">
-              
+            
+            {/* Screen 1: Deep Research Workspace */}
+            <div className="showcase-row">
+              <div className="showcase-text-content">
+                <span className="showcase-tag">Phase 01 / Cognitive Research Workspace</span>
+                <h2 className="showcase-title">Parallel Deep Web Crawling & Synthesis</h2>
+                <p className="showcase-desc">
+                  Galaxy deconstructs single queries into distinct, targeted sub-queries. An asynchronous network scraper fetches content in parallel, strips DOM boilerplate, and performs factual consensus audits to compile final reports using local LLM contexts.
+                </p>
+                <div className="showcase-bullets">
+                  <div className="showcase-bullet-item"><CheckCircle2 size={14} className="showcase-bullet-icon" /> Recursive Query Decomposition</div>
+                  <div className="showcase-bullet-item"><CheckCircle2 size={14} className="showcase-bullet-icon" /> Concurrent HTML/DOM Document Parsing</div>
+                  <div className="showcase-bullet-item"><CheckCircle2 size={14} className="showcase-bullet-icon" /> Factual Claim Consensus Checking</div>
+                </div>
+              </div>
+
               {/* Window 1: Workspace Chat & Status */}
-              <div className="mockup-window workspace-window">
+              <div className="mockup-window workspace-window" style={{ flex: 1 }}>
                 <header className="mockup-titlebar">
                   <div className="mockup-titlebar-left">
                     <span className="mockup-app-logo">Galaxy</span>
@@ -518,7 +530,6 @@ export default function App() {
                     </div>
                     
                     <div className="mockup-chat-history">
-                      {/* User Query message */}
                       <div className="mockup-msg user">
                         <div className="mockup-msg-meta">Query</div>
                         <div className="mockup-msg-content">
@@ -531,7 +542,6 @@ export default function App() {
                           <div className="mockup-msg-meta">Galaxy Agent</div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', width: '100%' }}>
                             
-                            {/* App Stepper */}
                             <div className="mockup-research-phases">
                               <div className={`mockup-phase-step ${mockupPhase === 'searching' ? 'active' : ''} ${['scraped', 'synthesizing', 'done'].includes(mockupPhase) ? 'completed' : ''}`}>
                                 <div className="mockup-phase-dot"></div>
@@ -554,7 +564,6 @@ export default function App() {
                               </div>
                             </div>
 
-                            {/* Dynamic components based on execution stage */}
                             {mockupPhase === 'searching' && (
                               <div className="mockup-sub-queries">
                                 <span className="mockup-msg-meta">Decomposing Search Space</span>
@@ -645,8 +654,8 @@ export default function App() {
                       ) : (
                         <div style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', color: 'var(--mockup-text-tertiary)', fontSize: '12px', fontStyle: 'italic', textAlign: 'center' }}>
                           {mockupPhase === 'idle' && "Submit query to compile deep research report"}
-                          {mockupPhase === 'searching' && "Phase 1: Compiling initial deconstructed sources..."}
-                          {mockupPhase === 'scraped' && "Phase 2: Extracting clean markdown text elements..."}
+                          {mockupPhase === 'searching' && "Phase 1: Compiling deconstructed sources..."}
+                          {mockupPhase === 'scraped' && "Phase 2: Extracting clean markdown text..."}
                           {mockupPhase === 'synthesizing' && "Phase 3: Cross-referencing source claims..."}
                         </div>
                       )}
@@ -654,9 +663,12 @@ export default function App() {
                   </div>
                 </div>
               </div>
+            </div>
 
+            {/* Screen 2: System Configuration (Alternating: Mockup left, Text right) */}
+            <div className="showcase-row alternate">
               {/* Window 2: Engine Settings */}
-              <div className="mockup-window settings-window">
+              <div className="mockup-window settings-window" style={{ maxWidth: '420px', width: '100%', margin: '0 auto' }}>
                 <header className="mockup-titlebar">
                   <div className="mockup-titlebar-left">
                     <span className="mockup-app-logo">Galaxy</span>
@@ -699,8 +711,37 @@ export default function App() {
                 </div>
               </div>
 
+              <div className="showcase-text-content">
+                <span className="showcase-tag">Phase 02 / Local Model Infrastructure</span>
+                <h2 className="showcase-title">Ollama Engine Integration</h2>
+                <p className="showcase-desc">
+                  Galaxy routes all core LLM operations directly through your local Ollama connection. Select active model tags, tune model temperatures, and custom allocate contextual token budgets directly inside your desktop settings.
+                </p>
+                <div className="showcase-bullets">
+                  <div className="showcase-bullet-item"><CheckCircle2 size={14} className="showcase-bullet-icon" /> Host Connection Auto-Scanning</div>
+                  <div className="showcase-bullet-item"><CheckCircle2 size={14} className="showcase-bullet-icon" /> Custom Model Parameter Fine-Tuning</div>
+                  <div className="showcase-bullet-item"><CheckCircle2 size={14} className="showcase-bullet-icon" /> Context Length Expansion Allocation</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Screen 3: History Vault & Auth (Alternating: Text left, Mockup right) */}
+            <div className="showcase-row">
+              <div className="showcase-text-content">
+                <span className="showcase-tag">Phase 03 / Database Sync & Telemetry</span>
+                <h2 className="showcase-title">Secure Historical Vault Syncing</h2>
+                <p className="showcase-desc">
+                  Review all previous local deep research sessions. Authenticate with Google Sign-in to securely synchronize session telemetry, model runs, and token ingestion logs to your real-time profile dashboard.
+                </p>
+                <div className="showcase-bullets">
+                  <div className="showcase-bullet-item"><CheckCircle2 size={14} className="showcase-bullet-icon" /> Encrypted Session History Logger</div>
+                  <div className="showcase-bullet-item"><CheckCircle2 size={14} className="showcase-bullet-icon" /> Google OAuth Security Protocol</div>
+                  <div className="showcase-bullet-item"><CheckCircle2 size={14} className="showcase-bullet-icon" /> Automatic Token Telemetry Sync</div>
+                </div>
+              </div>
+
               {/* Window 3: Run History & Auth */}
-              <div className="mockup-window history-window">
+              <div className="mockup-window settings-window" style={{ maxWidth: '420px', width: '100%', margin: '0 auto' }}>
                 <header className="mockup-titlebar">
                   <div className="mockup-titlebar-left">
                     <span className="mockup-app-logo">Galaxy</span>
@@ -732,8 +773,8 @@ export default function App() {
                   </div>
                 </div>
               </div>
-
             </div>
+
           </section>
 
           {/* Typographic Features Grid */}

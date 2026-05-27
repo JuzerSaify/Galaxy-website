@@ -336,15 +336,85 @@
 /* /* App Mockup Section (Landscape Side-by-Side Windows) */
 .mockup-section {
   width: 100%;
-  max-width: 1440px;
-  margin: 10px auto 60px auto;
+  max-width: 1200px;
+  margin: 80px auto;
   padding: 0 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* Alternating Showcase Rows */
+.showcase-row {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 80px;
+  align-items: center;
+  margin-bottom: 100px;
+  width: 100%;
+}
+
+.showcase-row:last-child {
+  margin-bottom: 0;
+}
+
+.showcase-row.alternate {
+  grid-template-columns: 1.4fr 1fr;
+}
+
+.showcase-text-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.showcase-tag {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--text-tertiary);
+}
+
+.showcase-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.showcase-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.showcase-bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.showcase-bullet-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.showcase-bullet-icon {
+  color: var(--text-primary);
+  opacity: 0.7;
 }
 
 .mockup-grid {
-  display: grid;
-  grid-template-columns: 2.2fr 1fr 1.1fr;
-  gap: 24px;
+  display: flex;
+  flex-direction: column;
   width: 100%;
 }
 
