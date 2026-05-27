@@ -35,6 +35,9 @@ export default function App() {
     recentQueries: []
   });
 
+  const [showLaunchBtn, setShowLaunchBtn] = useState(false);
+  const [launchUrl, setLaunchUrl] = useState('');
+
   // App Mockup Animation Loop States
   const [mockupPhase, setMockupPhase] = useState('idle'); // 'idle' | 'searching' | 'scraped' | 'synthesizing' | 'done'
   const [mockupSearch] = useState('Market share of electric vehicles in Europe in 2025');
@@ -76,11 +79,14 @@ export default function App() {
 
       if (accessToken && refreshToken) {
         if (isDesktop) {
-          setCallbackMsg('Authentication successful! Launching Knovant Desktop Application...');
+          const url = `knovant://auth-callback#access_token=${accessToken}&refresh_token=${refreshToken}`;
+          setLaunchUrl(url);
+          setCallbackMsg('Authentication successful! Transferring secure session to Knovant Desktop...');
           localStorage.removeItem('auth_desktop_initiated');
+          setShowLaunchBtn(true);
           setTimeout(() => {
-            window.location.href = `knovant://auth-callback#access_token=${accessToken}&refresh_token=${refreshToken}`;
-          }, 1500);
+            window.location.href = url;
+          }, 1000);
         } else {
           setCallbackMsg('Signing in to website profile dashboard...');
           supabase.auth.setSession({
@@ -105,10 +111,13 @@ export default function App() {
           // If loaded with explicit desktop trigger, redirect back to desktop app instantly!
           if (window.location.search.includes('desktop=true')) {
             setPage('callback');
+            const url = `knovant://auth-callback#access_token=${session.access_token}&refresh_token=${session.refresh_token}`;
+            setLaunchUrl(url);
             setCallbackMsg('User already authenticated on browser! Transferring secure session to Knovant Desktop...');
+            setShowLaunchBtn(true);
             setTimeout(() => {
-              window.location.href = `knovant://auth-callback#access_token=${session.access_token}&refresh_token=${session.refresh_token}`;
-            }, 1200);
+              window.location.href = url;
+            }, 1000);
           }
         }
       });
@@ -1219,9 +1228,35 @@ export default function App() {
       )}
 
       {page === 'callback' && (
-        <section className="callback-loader-container">
-          <div className="callback-spinner"></div>
-          <span style={{ fontSize: '13.5px', color: 'var(--text-secondary)' }}>{callbackMsg}</span>
+        <section className="callback-loader-container" style={{ display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', padding: '40px 20px', textAlign: 'center' }}>
+          {!showLaunchBtn && <div className="callback-spinner"></div>}
+          <span style={{ fontSize: '15px', fontWeight: '500', color: 'var(--text-primary)', maxWidth: '480px', lineHeight: '1.6' }}>{callbackMsg}</span>
+          
+          {showLaunchBtn && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center', marginTop: '10px' }} className="fade-in">
+              <a 
+                href={launchUrl}
+                className="btn-primary" 
+                style={{ 
+                  display: 'flex', 
+                  gap: '8px', 
+                  alignItems: 'center', 
+                  padding: '12px 28px', 
+                  borderRadius: '4px', 
+                  fontSize: '14.5px', 
+                  fontWeight: '600', 
+                  textDecoration: 'none',
+                  boxShadow: '0 4px 12px rgba(56, 189, 248, 0.2)'
+                }}
+              >
+                <Monitor size={16} />
+                <span>Launch Knovant Desktop</span>
+              </a>
+              <span style={{ fontSize: '12.5px', color: 'var(--text-tertiary)', maxWidth: '320px' }}>
+                If the application didn't open automatically, click the button above to launch.
+              </span>
+            </div>
+          )}
         </section>
       )}
 
