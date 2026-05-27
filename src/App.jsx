@@ -444,6 +444,7 @@ export default function App() {
       {/* Site Header */}
       <header className="site-header">
         <div className="logo-container" style={{ cursor: 'pointer' }} onClick={() => setPage('landing')}>
+          <img src="/knovant-logo-transparent.png" alt="Knovant logo" className="logo-icon" />
           <span className="logo-text">Knovant</span>
         </div>
         
