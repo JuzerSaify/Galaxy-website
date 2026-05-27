@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /callback
+Disallow: /dashboard
+
+Sitemap: https://galaxy-website-ivory.vercel.app/sitemap.xml
