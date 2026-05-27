@@ -76,10 +76,10 @@ export default function App() {
 
       if (accessToken && refreshToken) {
         if (isDesktop) {
-          setCallbackMsg('Authentication successful! Launching Galaxy Desktop Application...');
+          setCallbackMsg('Authentication successful! Launching Knovant Desktop Application...');
           localStorage.removeItem('auth_desktop_initiated');
           setTimeout(() => {
-            window.location.href = `galaxy://auth-callback#access_token=${accessToken}&refresh_token=${refreshToken}`;
+            window.location.href = `knovant://auth-callback#access_token=${accessToken}&refresh_token=${refreshToken}`;
           }, 1500);
         } else {
           setCallbackMsg('Signing in to website profile dashboard...');
@@ -105,9 +105,9 @@ export default function App() {
           // If loaded with explicit desktop trigger, redirect back to desktop app instantly!
           if (window.location.search.includes('desktop=true')) {
             setPage('callback');
-            setCallbackMsg('User already authenticated on browser! Transferring secure session to Galaxy Desktop...');
+            setCallbackMsg('User already authenticated on browser! Transferring secure session to Knovant Desktop...');
             setTimeout(() => {
-              window.location.href = `galaxy://auth-callback#access_token=${session.access_token}&refresh_token=${session.refresh_token}`;
+              window.location.href = `knovant://auth-callback#access_token=${session.access_token}&refresh_token=${session.refresh_token}`;
             }, 1200);
           }
         }
@@ -444,7 +444,7 @@ export default function App() {
       {/* Site Header */}
       <header className="site-header">
         <div className="logo-container" style={{ cursor: 'pointer' }} onClick={() => setPage('landing')}>
-          <span className="logo-text">Galaxy</span>
+          <span className="logo-text">Knovant</span>
         </div>
         
         {/* Real-time Global Ingestion Volume indicator */}
@@ -483,11 +483,11 @@ export default function App() {
             <div className="hero-tagline">Elite Intelligence Assistant</div>
             <h1 className="hero-title">Local-First Deep Web Research</h1>
             <p className="hero-subtitle">
-              Galaxy is an enterprise-grade local-first desktop intelligence system. It orchestrates parallel query-decomposition threads, scrapes DOM text using zero-dependency Cheerio pipelines, cross-checks source statements with cosine similarity semantic score filters, and drafts deep reports on your machine using local Ollama model context.
+              Knovant is an enterprise-grade local-first desktop intelligence system. It orchestrates parallel query-decomposition threads, scrapes DOM text using zero-dependency Cheerio pipelines, cross-checks source statements with cosine similarity semantic score filters, and drafts deep reports on your machine using local Ollama model context.
             </p>
             
             <div className="hero-actions">
-              <a href="https://github.com/JuzerSaify/galaxy/releases/download/v1.0.0/Galaxy.Setup.1.0.0.exe" className="btn-primary">
+              <a href="/Knovant.Setup.1.0.0.exe" className="btn-primary">
                 <ArrowDownToLine size={18} />
                 Download for Windows (v1.0.0)
               </a>
@@ -520,7 +520,7 @@ export default function App() {
                 <span className="showcase-tag">Phase 01 / Cognitive Research Workspace</span>
                 <h2 className="showcase-title">Parallel Deep Web Crawling & Synthesis</h2>
                 <p className="showcase-desc">
-                  Galaxy deconstructs single queries into distinct, targeted sub-queries. An asynchronous network scraper fetches content in parallel, strips DOM boilerplate, and performs factual consensus audits to compile final reports using local LLM contexts.
+                  Knovant deconstructs single queries into distinct, targeted sub-queries. An asynchronous network scraper fetches content in parallel, strips DOM boilerplate, and performs factual consensus audits to compile final reports using local LLM contexts.
                 </p>
                 <div className="showcase-bullets">
                   <div className="showcase-bullet-item"><CheckCircle2 size={14} className="showcase-bullet-icon" /> Recursive Query Decomposition</div>
@@ -533,7 +533,7 @@ export default function App() {
               <div className="mockup-window workspace-window" style={{ flex: 1 }}>
                 <header className="mockup-titlebar">
                   <div className="mockup-titlebar-left">
-                    <span className="mockup-app-logo">Galaxy</span>
+                    <span className="mockup-app-logo">Knovant</span>
                     <span className="mockup-version-badge">Workspace</span>
                   </div>
                   <div className="mockup-titlebar-right">
@@ -563,7 +563,7 @@ export default function App() {
 
                       {mockupPhase !== 'idle' && (
                         <div className="mockup-msg assistant">
-                          <div className="mockup-msg-meta">Galaxy Agent</div>
+                          <div className="mockup-msg-meta">Knovant Agent</div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', width: '100%' }}>
                             
                             <div className="mockup-research-phases">
@@ -695,7 +695,7 @@ export default function App() {
               <div className="mockup-window settings-window" style={{ maxWidth: '420px', width: '100%', margin: '0 auto' }}>
                 <header className="mockup-titlebar">
                   <div className="mockup-titlebar-left">
-                    <span className="mockup-app-logo">Galaxy</span>
+                    <span className="mockup-app-logo">Knovant</span>
                     <span className="mockup-version-badge">Settings</span>
                   </div>
                 </header>
@@ -739,7 +739,7 @@ export default function App() {
                 <span className="showcase-tag">Phase 02 / Local Model Infrastructure</span>
                 <h2 className="showcase-title">Ollama Engine Integration</h2>
                 <p className="showcase-desc">
-                  Galaxy routes all core LLM operations directly through your local Ollama connection. Select active model tags, tune model temperatures, and custom allocate contextual token budgets directly inside your desktop settings.
+                  Knovant routes all core LLM operations directly through your local Ollama connection. Select active model tags, tune model temperatures, and custom allocate contextual token budgets directly inside your desktop settings.
                 </p>
                 <div className="showcase-bullets">
                   <div className="showcase-bullet-item"><CheckCircle2 size={14} className="showcase-bullet-icon" /> Host Connection Auto-Scanning</div>
@@ -768,7 +768,7 @@ export default function App() {
               <div className="mockup-window settings-window" style={{ maxWidth: '420px', width: '100%', margin: '0 auto' }}>
                 <header className="mockup-titlebar">
                   <div className="mockup-titlebar-left">
-                    <span className="mockup-app-logo">Galaxy</span>
+                    <span className="mockup-app-logo">Knovant</span>
                     <span className="mockup-version-badge">History & Access</span>
                   </div>
                 </header>
@@ -812,7 +812,7 @@ export default function App() {
               <span className="feature-meta">Engine 01 / DECONSTRUCT</span>
               <h3 className="feature-title">Query Decomposition</h3>
               <p className="feature-desc">
-                Galaxy leverages a custom decomposition parser to analyze complex search instructions. It recursively splits single questions into 3 to 5 distinct, targeted sub-queries, creating a structured execution search tree.
+                Knovant leverages a custom decomposition parser to analyze complex search instructions. It recursively splits single questions into 3 to 5 distinct, targeted sub-queries, creating a structured execution search tree.
               </p>
             </div>
             
@@ -900,7 +900,7 @@ export default function App() {
                 <span className="timeline-step-num">05</span>
                 <div className="timeline-details">
                   <h4 className="timeline-step-title">Synthesis & PDF Report Compile</h4>
-                  <p className="timeline-step-desc">Galaxy structures the final Markdown documentation and compiles high-fidelity reports, printing dynamic SVGs directly into files.</p>
+                  <p className="timeline-step-desc">Knovant structures the final Markdown documentation and compiles high-fidelity reports, printing dynamic SVGs directly into files.</p>
                 </div>
               </div>
             </div>
@@ -915,7 +915,7 @@ export default function App() {
             <span className="section-tag">Release History</span>
             <h1 className="changelog-title">System Changelog</h1>
             <p className="changelog-subtitle">
-              Track the development updates, engine optimizations, and security patches of the Galaxy AI Deep Research platform.
+              Track the development updates, engine optimizations, and security patches of the Knovant AI Deep Research platform.
             </p>
             
             <div className="changelog-timeline">
@@ -944,7 +944,7 @@ export default function App() {
             
             <div className="auth-header">
               <h2 className="auth-title">
-                {authMode === 'signin' ? 'Sign in to Galaxy' : 'Create an Account'}
+                {authMode === 'signin' ? 'Sign in to Knovant' : 'Create an Account'}
               </h2>
               <p className="auth-subtitle">
                 Access your synced deep research dashboard
@@ -1128,7 +1128,7 @@ export default function App() {
                         {metrics.recentQueries.length === 0 ? (
                           <tr>
                             <td colSpan="5" className="table-empty-cell">
-                              No research runs logged. Open the Galaxy desktop client and initiate a deep research run to sync.
+                              No research runs logged. Open the Knovant desktop client and initiate a deep research run to sync.
                             </td>
                           </tr>
                         ) : (
@@ -1182,7 +1182,7 @@ export default function App() {
                         <span className="step-num">01</span>
                         <div className="step-content">
                           <span className="step-heading">Download Installer</span>
-                          <span className="step-description">Click below to fetch the desktop application installer executable (`Galaxy Setup 1.0.0.exe`).</span>
+                          <span className="step-description">Click below to fetch the desktop application installer executable (`Knovant Setup 1.0.0.exe`).</span>
                         </div>
                       </div>
                       <div className="setup-step">
@@ -1202,7 +1202,7 @@ export default function App() {
                     </div>
 
                     <div className="download-action-row">
-                      <a href="https://github.com/JuzerSaify/galaxy/releases/download/v1.0.0/Galaxy.Setup.1.0.0.exe" className="btn-primary" style={{ display: 'flex', gap: '8px', alignItems: 'center', padding: '10px 20px', borderRadius: '4px', fontSize: '13px', width: 'fit-content', fontWeight: '500' }}>
+                      <a href="/Knovant.Setup.1.0.0.exe" className="btn-primary" style={{ display: 'flex', gap: '8px', alignItems: 'center', padding: '10px 20px', borderRadius: '4px', fontSize: '13px', width: 'fit-content', fontWeight: '500' }}>
                         <Monitor size={15} />
                         <span>Download Standalone Client (.exe)</span>
                       </a>
@@ -1226,7 +1226,7 @@ export default function App() {
 
       {/* Footer */}
       <footer className="site-footer">
-        <span>© 2026 Galaxy AI Deep Research. All rights reserved.</span>
+        <span>© 2026 Knovant AI Deep Research. All rights reserved.</span>
         <span>Secure Local-First Architecture</span>
       </footer>
 
