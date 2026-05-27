@@ -98,14 +98,17 @@ export default function App() {
         }
       }
     } else {
-      // PERSIST user session check on boot, but keep page as 'landing' (unless loaded with explicit desktop trigger)
-      supabase.auth.getUser().then(({ data: { user } }) => {
-        if (user) {
-          setUser(user);
-          // Only direct to auth form if explicit desktop flow is requested
+      // PERSIST user session check on boot
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session && session.user) {
+          setUser(session.user);
+          // If loaded with explicit desktop trigger, redirect back to desktop app instantly!
           if (window.location.search.includes('desktop=true')) {
-            setPage('auth');
-            setAuthMode('signin');
+            setPage('callback');
+            setCallbackMsg('User already authenticated on browser! Transferring secure session to Galaxy Desktop...');
+            setTimeout(() => {
+              window.location.href = `galaxy://auth-callback#access_token=${session.access_token}&refresh_token=${session.refresh_token}`;
+            }, 1200);
           }
         }
       });
@@ -115,6 +118,27 @@ export default function App() {
       supabase.removeChannel(channel);
     };
   }, []);
+
+  // HTML5 History API Routing support (Back/Forward browser buttons)
+  useEffect(() => {
+    const handlePopState = (event) => {
+      if (event.state && event.state.page) {
+        setPage(event.state.page);
+      } else {
+        setPage('landing');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    window.history.replaceState({ page }, '', page === 'landing' ? '/' : `/${page}`);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  useEffect(() => {
+    const pathName = page === 'landing' ? '/' : `/${page}`;
+    if (window.location.pathname !== pathName) {
+      window.history.pushState({ page }, '', pathName);
+    }
+  }, [page]);
 
   // Smooth count-up tweening for global tokens in navbar
   useEffect(() => {
@@ -426,7 +450,7 @@ export default function App() {
         {/* Real-time Global Ingestion Volume indicator */}
         <div className="global-counter-container" title="Real-time global tokens processed by all desktop instances combined">
           <span className="counter-dot animate-pulse"></span>
-          <span className="counter-label">Global Synced Volume:</span>
+          <span className="counter-label">Token Usage Globally:</span>
           <span className="counter-value">{animatedTokens.toLocaleString()} tokens</span>
         </div>
         
