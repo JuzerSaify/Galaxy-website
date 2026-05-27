@@ -419,6 +419,7 @@ export default function App() {
       {/* Site Header */}
       <header className="site-header">
         <div className="logo-container" style={{ cursor: 'pointer' }} onClick={() => setPage('landing')}>
+          <img src="/galaxy-icon.png" alt="Galaxy" className="logo-icon" />
           <span className="logo-text">Galaxy</span>
         </div>
         

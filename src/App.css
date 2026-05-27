@@ -36,6 +36,13 @@
   color: var(--text-primary);
 }
 
+.logo-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
 /* Real-time Global Token Ingestion Bar */
 .global-counter-container {
   display: flex;
