@@ -10,6 +10,7 @@ export function useAuth(setPage, setCallbackMsg, setShowLaunchBtn, setLaunchUrl)
   const [authLoading, setAuthLoading] = useState(false);
   const [failedAttempts, setFailedAttempts] = useState(0);
   const [lockoutUntil, setLockoutUntil] = useState(null);
+  const [initialSessionChecked, setInitialSessionChecked] = useState(false);
 
   // Check initial session
   useEffect(() => {
@@ -27,6 +28,9 @@ export function useAuth(setPage, setCallbackMsg, setShowLaunchBtn, setLaunchUrl)
           }, 1000);
         }
       }
+      setInitialSessionChecked(true);
+    }).catch(() => {
+      setInitialSessionChecked(true);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -127,6 +131,7 @@ export function useAuth(setPage, setCallbackMsg, setShowLaunchBtn, setLaunchUrl)
     signIn,
     signUp,
     signInWithGoogle,
-    signOut
+    signOut,
+    initialSessionChecked
   };
 }

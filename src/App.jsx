@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { Monitor } from 'lucide-react';
 import { supabase, useAuth } from './hooks/useAuth';
 import { useMetrics } from './hooks/useMetrics';
@@ -25,6 +25,8 @@ export default function App() {
   // Dashboard metrics tab selection state
   const [activeDashboardTab, setActiveDashboardTab] = useState('overview');
 
+  const autoRedirectAttempted = useRef(false);
+
   // Instantiate custom authentication hook
   const {
     user,
@@ -33,7 +35,8 @@ export default function App() {
     signIn,
     signUp,
     signInWithGoogle,
-    signOut
+    signOut,
+    initialSessionChecked
   } = useAuth(setPage, setCallbackMsg, setShowLaunchBtn, setLaunchUrl);
 
   // Instantiate custom metrics data loading hook
@@ -42,6 +45,20 @@ export default function App() {
     metrics,
     refresh: fetchUserUsage
   } = useMetrics(user, page);
+
+  // Auto-trigger Google OAuth for desktop app flow
+  useEffect(() => {
+    const isDesktop = window.location.search.includes('desktop=true');
+    if (isDesktop && initialSessionChecked && !user && !autoRedirectAttempted.current) {
+      autoRedirectAttempted.current = true;
+      setPage('callback');
+      setCallbackMsg('Redirecting to Google for authentication...');
+      signInWithGoogle().catch((e) => {
+        console.error('[desktop-oauth] Auto-trigger failed:', e.message);
+        setPage('auth');
+      });
+    }
+  }, [user, initialSessionChecked]);
 
   // Handle URL deep linking, OAuth Callbacks, and global session check
   useEffect(() => {
