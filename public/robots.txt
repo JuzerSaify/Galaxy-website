@@ -3,4 +3,4 @@ Allow: /
 Disallow: /callback
 Disallow: /dashboard
 
-Sitemap: https://galaxy-website-ivory.vercel.app/sitemap.xml
+Sitemap: https://knovant.vercel.app/sitemap.xml
