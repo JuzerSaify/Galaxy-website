@@ -19,19 +19,44 @@ export function useAuth(setPage, setCallbackMsg, setShowLaunchBtn, setLaunchUrl)
       localStorage.setItem('auth_desktop_initiated', 'true');
     }
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (session && session.user) {
-        setUser(session.user);
-        if (isDesktopFlow) {
-          setPage('callback');
-          const url = `knovant://auth-callback#access_token=${session.access_token}&refresh_token=${session.refresh_token}`;
-          setLaunchUrl(url);
-          setCallbackMsg('User already authenticated on browser! Transferring secure session to Knovant Desktop...');
-          setShowLaunchBtn(true);
-          localStorage.removeItem('auth_desktop_initiated');
-          setTimeout(() => {
-            window.location.href = url;
-          }, 1000);
+        try {
+          // Perform a quick verification check with the server to ensure the session is active
+          const { data: { user: serverUser }, error } = await supabase.auth.getUser();
+          if (error) {
+            // If the server returns an explicit auth error (e.g. status 400, 401, 403, or session invalid message), sign out
+            if (error.status === 400 || error.status === 401 || error.status === 403 || error.message?.includes('session') || error.message?.includes('invalid')) {
+              console.warn('[auth] Browser session invalid on server, signing out locally.', error.message);
+              await supabase.auth.signOut();
+              setUser(null);
+              setInitialSessionChecked(true);
+              return;
+            }
+          }
+          
+          if (!serverUser) {
+            console.warn('[auth] Browser session missing user on server, signing out locally.');
+            await supabase.auth.signOut();
+            setUser(null);
+            setInitialSessionChecked(true);
+            return;
+          }
+
+          setUser(serverUser);
+          if (isDesktopFlow) {
+            setPage('callback');
+            const url = `knovant://auth-callback#access_token=${session.access_token}&refresh_token=${session.refresh_token}`;
+            setLaunchUrl(url);
+            setCallbackMsg('User already authenticated on browser! Transferring secure session to Knovant Desktop...');
+            setShowLaunchBtn(true);
+            localStorage.removeItem('auth_desktop_initiated');
+            setTimeout(() => {
+              window.location.href = url;
+            }, 1000);
+          }
+        } catch (e) {
+          console.warn('[auth] Error checking session with server:', e);
         }
       }
       setInitialSessionChecked(true);
