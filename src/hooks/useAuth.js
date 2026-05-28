@@ -14,10 +14,15 @@ export function useAuth(setPage, setCallbackMsg, setShowLaunchBtn, setLaunchUrl)
 
   // Check initial session
   useEffect(() => {
+    const isDesktopFlow = window.location.search.includes('desktop=true') || localStorage.getItem('auth_desktop_initiated') === 'true';
+    if (window.location.search.includes('desktop=true')) {
+      localStorage.setItem('auth_desktop_initiated', 'true');
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session && session.user) {
         setUser(session.user);
-        if (window.location.search.includes('desktop=true')) {
+        if (isDesktopFlow) {
           setPage('callback');
           const url = `knovant://auth-callback#access_token=${session.access_token}&refresh_token=${session.refresh_token}`;
           setLaunchUrl(url);

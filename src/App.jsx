@@ -12,6 +12,11 @@ const AuthForm = lazy(() => import('./components/AuthForm'));
 const Dashboard = lazy(() => import('./components/Dashboard'));
 
 export default function App() {
+  // Catch the desktop parameter immediately before any router or mount action strips it
+  if (typeof window !== 'undefined' && window.location.search.includes('desktop=true')) {
+    localStorage.setItem('auth_desktop_initiated', 'true');
+  }
+
   const [page, setPage] = useState('landing'); // 'landing' | 'auth' | 'dashboard' | 'callback' | 'changelog'
   const [authMode, setAuthMode] = useState('signin'); // 'signin' | 'signup'
   const [callbackMsg, setCallbackMsg] = useState('Verifying authentication...');
@@ -48,7 +53,7 @@ export default function App() {
 
   // Auto-trigger Google OAuth for desktop app flow
   useEffect(() => {
-    const isDesktop = window.location.search.includes('desktop=true');
+    const isDesktop = window.location.search.includes('desktop=true') || localStorage.getItem('auth_desktop_initiated') === 'true';
     if (isDesktop && initialSessionChecked && !user && !autoRedirectAttempted.current) {
       autoRedirectAttempted.current = true;
       setPage('callback');
@@ -145,14 +150,19 @@ export default function App() {
       }
     };
     window.addEventListener('popstate', handlePopState);
-    window.history.replaceState({ page }, '', page === 'landing' ? '/' : `/${page}`);
+    const pathName = page === 'landing' ? '/' : `/${page}`;
+    const search = window.location.search;
+    const hash = window.location.hash;
+    window.history.replaceState({ page }, '', `${pathName}${search}${hash}`);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   useEffect(() => {
     const pathName = page === 'landing' ? '/' : `/${page}`;
     if (window.location.pathname !== pathName) {
-      window.history.pushState({ page }, '', pathName);
+      const search = window.location.search;
+      const hash = window.location.hash;
+      window.history.pushState({ page }, '', `${pathName}${search}${hash}`);
     }
   }, [page]);
 
