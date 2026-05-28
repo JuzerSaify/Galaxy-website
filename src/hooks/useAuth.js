@@ -28,6 +28,7 @@ export function useAuth(setPage, setCallbackMsg, setShowLaunchBtn, setLaunchUrl)
           setLaunchUrl(url);
           setCallbackMsg('User already authenticated on browser! Transferring secure session to Knovant Desktop...');
           setShowLaunchBtn(true);
+          localStorage.removeItem('auth_desktop_initiated');
           setTimeout(() => {
             window.location.href = url;
           }, 1000);

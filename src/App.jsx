@@ -13,8 +13,15 @@ const Dashboard = lazy(() => import('./components/Dashboard'));
 
 export default function App() {
   // Catch the desktop parameter immediately before any router or mount action strips it
-  if (typeof window !== 'undefined' && window.location.search.includes('desktop=true')) {
-    localStorage.setItem('auth_desktop_initiated', 'true');
+  if (typeof window !== 'undefined') {
+    const hasDesktopParam = window.location.search.includes('desktop=true');
+    const hasHash = window.location.hash.includes('access_token=') || window.location.hash.includes('error=');
+    if (hasDesktopParam) {
+      localStorage.setItem('auth_desktop_initiated', 'true');
+    } else if (!hasHash) {
+      // Normal website visit — clear any stale desktop session flags
+      localStorage.removeItem('auth_desktop_initiated');
+    }
   }
 
   const [page, setPage] = useState('landing'); // 'landing' | 'auth' | 'dashboard' | 'callback' | 'changelog'
